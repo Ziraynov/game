@@ -1,0 +1,53 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.badlogicgames.com' }
+    }
+    dependencies {
+        classpath 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.13.0' // Обнови версию если нужно
+        classpath 'com.badlogicgames.gdx:gdx-platform:1.13.0:natives-desktop' // Подключение для настольной платформы
+    }
+}
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url 'https://maven.badlogicgames.com' }
+    }
+}
+sourceSets {
+    main {
+        resources.srcDirs = ['src/main/assets']  // Убедись, что это прописано
+    }
+}
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.badlogicgames.gdx:gdx:1.13.0'
+    // Основная зависимость LibGDX
+    implementation 'com.badlogicgames.gdx:gdx:1.13.0'
+
+    // Локальный бэкенд для настольных приложений (LWJGL3)
+    implementation 'com.badlogicgames.gdx:gdx-backend-lwjgl3:1.13.0'
+
+    // Зависимость для нативных библиотек
+    implementation 'com.badlogicgames.gdx:gdx-platform:1.13.0:natives-desktop'
+
+    // Зависимость для физики Box2D (если используешь)
+    implementation 'com.badlogicgames.gdx:gdx-box2d:1.13.0'
+
+    //ломбок
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+
+}
+
+
+test {
+    useJUnitPlatform()
+}
