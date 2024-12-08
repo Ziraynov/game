@@ -1,5 +1,6 @@
-package Classes;
+package Screens;
 
+import Classes.MyGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -12,14 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+
+
 public class MenuScreen implements Screen {
     private Stage stage;
-    private TextButton playButton;
-    private TextButton settingsButton;
-    private TextButton exitButton;
-    private BitmapFont font;
 
-    private MyGame game;
+    private final MyGame game;
 
     public MenuScreen(MyGame game) {
         this.game = game;
@@ -30,13 +29,13 @@ public class MenuScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        font = new BitmapFont();
+        BitmapFont font = new BitmapFont();
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.font = font;
         style.fontColor = Color.WHITE;
 
         // Кнопка "Игра"
-        playButton = new TextButton("Game", style);
+        TextButton playButton = new TextButton("Game", style);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -45,7 +44,7 @@ public class MenuScreen implements Screen {
         });
 
         // Кнопка "Настройки" (пока не работает)
-        settingsButton = new TextButton("Settings", style);
+        TextButton settingsButton = new TextButton("Settings", style);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -54,7 +53,7 @@ public class MenuScreen implements Screen {
         });
 
         // Кнопка "Выход"
-        exitButton = new TextButton("Exit", style);
+        TextButton exitButton = new TextButton("Exit", style);
         exitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {

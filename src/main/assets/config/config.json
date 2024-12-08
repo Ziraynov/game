@@ -1,0 +1,15 @@
+{
+  "controls" : {
+    "moveUp" : "W",
+    "moveDown" : "S",
+    "moveLeft" : "A",
+    "moveRight" : "D",
+    "action" : "E",
+    "pause" : "Escape",
+    "attack" : "Space"
+  },
+  "graphics" : {
+    "resolution" : "800x600",
+    "fullscreen" : false
+  }
+}

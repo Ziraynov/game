@@ -1,5 +1,8 @@
-package Classes;
+package Screens;
 
+import Classes.ConfigManager;
+import Classes.Coordinates;
+import Classes.MyGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -16,6 +19,7 @@ public class GameScreen implements Screen {
 
     private SpriteBatch batch;
 
+    private ConfigManager configManager;
     // Пол
     private Texture floorTexture;
 
@@ -34,15 +38,28 @@ public class GameScreen implements Screen {
     // Границы уровня и экрана
     private final float WORLD_WIDTH = 3000; // Ширина уровня (совпадает с экраном)
     private final float WORLD_HEIGHT = 2000; // Высота уровня (совпадает с экраном)
-    private final float PLAYER_WIDTH = 32; // Ширина персонажа
-    private final float PLAYER_HEIGHT = 32; // Высота персонажа
 
-    private boolean isPaused; // Флаг состояния паузы
+    private boolean isPaused;
+
+
+    private int moveUpKey;
+    private int moveDownKey;
+    private int moveLeftKey;
+    private int moveRightKey;// Флаг состояния паузы
 
 
     public GameScreen(MyGame game) {
         this.game = game;
+        this.configManager = new ConfigManager(); // Инициализируем менеджер настроек
+        loadControlKeys();
         isPaused = false; // Изначально игра не на паузе
+    }
+
+    public void loadControlKeys() {
+        moveUpKey = Input.Keys.valueOf(configManager.getValue("controls", "moveUp"));
+        moveDownKey = Input.Keys.valueOf(configManager.getValue("controls", "moveDown"));
+        moveLeftKey = Input.Keys.valueOf(configManager.getValue("controls", "moveLeft"));
+        moveRightKey = Input.Keys.valueOf(configManager.getValue("controls", "moveRight"));
     }
 
     @Override
@@ -135,7 +152,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void resume() {
-
+        loadControlKeys(); // Перезагружаем клавиши из настроек
+        isPaused = false;
     }
 
     public void setPaused(boolean paused) {
@@ -144,19 +162,19 @@ public class GameScreen implements Screen {
 
     private void diagonalMovement(float x, float y, float diagonalSpeed, Coordinates coordinates) {
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (Gdx.input.isKeyPressed(moveRightKey) && Gdx.input.isKeyPressed(moveUpKey)) {
             x += diagonalSpeed; // Диагональ вправо-вверх
             y += diagonalSpeed;
             currentFrame = walkRight.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(moveRightKey) && Gdx.input.isKeyPressed(moveDownKey)) {
             x += diagonalSpeed; // Диагональ вправо-вниз
             y -= diagonalSpeed;
             currentFrame = walkRight.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.W)) {
+        } else if (Gdx.input.isKeyPressed(moveLeftKey) && Gdx.input.isKeyPressed(moveUpKey)) {
             x -= diagonalSpeed; // Диагональ влево-вверх
             y += diagonalSpeed;
             currentFrame = walkLeft.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(moveLeftKey) && Gdx.input.isKeyPressed(moveDownKey)) {
             x -= diagonalSpeed; // Диагональ влево-вниз
             y -= diagonalSpeed;
             currentFrame = walkLeft.getKeyFrame(stateTime, true);
@@ -166,18 +184,19 @@ public class GameScreen implements Screen {
 
 
     }
+
     private void horizontalMovement(float x, float y, float speed, Coordinates coordinates) {
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(moveRightKey)) {
             x += speed; // Движение вправо
             currentFrame = walkRight.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        } else if (Gdx.input.isKeyPressed(moveLeftKey)) {
             x -= speed; // Движение влево
             currentFrame = walkLeft.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        } else if (Gdx.input.isKeyPressed(moveUpKey)) {
             y += speed; // Движение вверх
             currentFrame = walkUp.getKeyFrame(stateTime, true);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        } else if (Gdx.input.isKeyPressed(moveDownKey)) {
             y -= speed; // Движение вниз
             currentFrame = walkDown.getKeyFrame(stateTime, true);
         }
@@ -199,19 +218,23 @@ public class GameScreen implements Screen {
         }
 
         // Проверяем ввод для движения
-        if (Gdx.input.isKeyPressed(Input.Keys.D) && coordinates.getX() + PLAYER_WIDTH < WORLD_WIDTH) {
+        // Ширина персонажа
+        float PLAYER_WIDTH = 32;
+        if (Gdx.input.isKeyPressed(moveRightKey) && coordinates.getX() + PLAYER_WIDTH < WORLD_WIDTH) {
             movingHorizontally = true;
             direction = "right";
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.A) && coordinates.getX() > 0) {
+        if (Gdx.input.isKeyPressed(moveLeftKey) && coordinates.getX() > 0) {
             movingHorizontally = true;
             direction = "left";
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && coordinates.getY() + PLAYER_HEIGHT < WORLD_HEIGHT) {
+        // Высота персонажа
+        float PLAYER_HEIGHT = 32;
+        if (Gdx.input.isKeyPressed(moveUpKey) && coordinates.getY() + PLAYER_HEIGHT < WORLD_HEIGHT) {
             movingVertically = true;
             direction = "up";
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S) && coordinates.getY() > 0) {
+        if (Gdx.input.isKeyPressed(moveDownKey) && coordinates.getY() > 0) {
             movingVertically = true;
             direction = "down";
         }
@@ -219,9 +242,8 @@ public class GameScreen implements Screen {
         //Рассчет координат перемещения
         if (movingHorizontally && movingVertically) {
             diagonalMovement(coordinates.getX(), coordinates.getY(), diagonalSpeed, coordinates);
-        }
-        else{
-           horizontalMovement(coordinates.getX(), coordinates.getY(), diagonalSpeed, coordinates);
+        } else {
+            horizontalMovement(coordinates.getX(), coordinates.getY(), diagonalSpeed, coordinates);
         }
 
         // Если персонаж перестал двигаться — остаётся последний кадр в текущем направлении

@@ -1,13 +1,21 @@
 package Classes;
 
+import Screens.GameScreen;
+import Screens.MenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Preferences;
+import lombok.Getter;
+import lombok.Setter;
 
 public class MyGame extends Game {
 
+    @Getter
+    @Setter
     private GameScreen previousScreen; // Хранит экран перед паузой
     private boolean isResume = false;
+
+    @Getter
+    private ConfigManager configManager; // Менеджер конфигурации
 
     public boolean isResume() {
         return isResume;
@@ -17,33 +25,26 @@ public class MyGame extends Game {
         isResume = resume;
     }
 
-    public void setPreviousScreen(GameScreen screen) {
-        this.previousScreen = screen;
-    }
-
-    public GameScreen getPreviousScreen() {
-        return previousScreen;
-    }
-
     @Override
     public void create() {
-        // Загружаем настройки
-        Preferences preferences = Gdx.app.getPreferences("GameSettings");
+        // Инициализация менеджера конфигурации
+        configManager = new ConfigManager();
 
         // Проверяем, был ли первый запуск
-        if (!preferences.contains("screenWidth")) {
+        if (!configManager.hasKey("graphics", "resolution")) {
             // Если настройки отсутствуют, устанавливаем значения по умолчанию
-            preferences.putInteger("screenWidth", 800);
-            preferences.putInteger("screenHeight", 600);
-            preferences.putBoolean("fullscreen", false);
-            preferences.flush();
+            configManager.setValue("graphics", "resolution", "800x600");
+            configManager.setBoolean("graphics", "fullscreen", false);
+            configManager.saveConfig();
         }
 
-        String resolution = preferences.getString("resolution","800x600");
+        // Загружаем настройки экрана
+        String resolution = configManager.getValue("graphics", "resolution");
+        boolean fullscreen = configManager.getBoolean("graphics", "fullscreen");
+
         String[] resParts = resolution.split("x");
         int screenWidth = Integer.parseInt(resParts[0]);
         int screenHeight = Integer.parseInt(resParts[1]);
-        boolean fullscreen = preferences.getBoolean("fullscreen", false);
 
         // Применяем настройки
         if (fullscreen) {
@@ -68,4 +69,5 @@ public class MyGame extends Game {
         // Уничтожение ресурсов
         super.dispose();
     }
+
 }

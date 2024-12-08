@@ -1,28 +1,17 @@
 package Classes;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@AllArgsConstructor
+@Getter
+@Setter
+@Data
 public class Coordinates {
 
     private Float x;
     private Float y;
 
-    public Coordinates(Float x, Float y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setX(Float x) {
-        this.x = x;
-    }
-
-    public void setY(Float y) {
-        this.y = y;
-    }
-
-    public Float getX() {
-        return x;
-    }
-
-    public Float getY() {
-        return y;
-    }
 }
