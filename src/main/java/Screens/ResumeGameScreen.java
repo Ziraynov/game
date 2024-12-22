@@ -42,7 +42,8 @@ public class ResumeGameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 GameScreen gameScreen = game.getPreviousScreen();
-                gameScreen.loadControlKeys();
+                gameScreen.handleInput.loadControlKeys();
+                gameScreen.loadCamera();
                 gameScreen.setPaused(false);
                 game.setScreen(gameScreen);
             }

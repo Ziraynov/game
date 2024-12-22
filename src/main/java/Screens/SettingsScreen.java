@@ -23,6 +23,7 @@ public class SettingsScreen implements Screen {
     private Label downKeyLabel;
     private Label leftKeyLabel;
     private Label rightKeyLabel;
+    private Label attackKeyLabel;
     private SelectBox<String> resolutionBox;
     private CheckBox fullscreenCheckbox;
 
@@ -67,6 +68,7 @@ public class SettingsScreen implements Screen {
         downKeyLabel = createKeyLabel("Move Down", "moveDown", skin);
         leftKeyLabel = createKeyLabel("Move Left", "moveLeft", skin);
         rightKeyLabel = createKeyLabel("Move Right", "moveRight", skin);
+        attackKeyLabel = createKeyLabel("Attack","attack",skin);
 
         // Кнопка для применения настроек
         TextButton applyButton = new TextButton("Apply", skin);
@@ -94,6 +96,7 @@ public class SettingsScreen implements Screen {
         addKeySettingRow(table, "Change Down Key", "moveDown", downKeyLabel, skin);
         addKeySettingRow(table, "Change Left Key", "moveLeft", leftKeyLabel, skin);
         addKeySettingRow(table, "Change Right Key", "moveRight", rightKeyLabel, skin);
+        addKeySettingRow(table, "Change Attack Key", "attack", attackKeyLabel, skin);
         table.add(applyButton).padTop(20).width(150).height(50).row();
         table.add(backButton).padTop(20).width(150).height(50).row();
 
@@ -162,10 +165,9 @@ public class SettingsScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (waitingForInput) {
-            int keyCode = getPressedKey();
-            if (keyCode != -1) {
-                String keyName = Input.Keys.toString(keyCode);
-                configManager.setValue("controls", currentKeyAction, keyName);
+            String keyName = getPressedKey();
+            if (keyName != null) {
+                configManager.setValue("controls", currentKeyAction, keyName); // Сохраняем строку
                 configManager.saveConfig();
                 updateKeyLabel(currentKeyAction, keyName);
                 waitingForInput = false;
@@ -191,18 +193,38 @@ public class SettingsScreen implements Screen {
             case "moveRight":
                 rightKeyLabel.setText("Move Right: " + keyName);
                 break;
+            case "attack":
+                attackKeyLabel.setText("Attack: " + keyName);
+                break;
         }
     }
-
-    private int getPressedKey() {
+    private String getPressedKey() {
+        // Проверка клавиш клавиатуры
         for (int i = 0; i < Input.Keys.MAX_KEYCODE; i++) {
             if (Gdx.input.isKeyPressed(i)) {
-                return i;
+                return Input.Keys.toString(i); // Возвращает название клавиши
             }
         }
-        return -1;
-    }
 
+        // Проверка кнопок мыши
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            return "Mouse Left";
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+            return "Mouse Right";
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.MIDDLE)) {
+            return "Mouse Middle";
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.BACK)) {
+            return "Mouse Back";
+        }
+        if (Gdx.input.isButtonPressed(Input.Buttons.FORWARD)) {
+            return "Mouse Forward";
+        }
+
+        return null; // Ничего не нажато
+    }
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -219,8 +241,10 @@ public class SettingsScreen implements Screen {
     }
 
     @Override
-    public void pause() {}
+    public void pause() {
+    }
 
     @Override
-    public void resume() {}
+    public void resume() {
+    }
 }

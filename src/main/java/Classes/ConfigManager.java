@@ -63,6 +63,7 @@ public class ConfigManager {
         defaultConfig.set("controls", controls);
         defaultConfig.set("graphics", graphics);
 
+
         return defaultConfig;
     }
 

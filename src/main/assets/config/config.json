@@ -6,10 +6,10 @@
     "moveRight" : "D",
     "action" : "E",
     "pause" : "Escape",
-    "attack" : "Space"
+    "attack" : "Mouse Left"
   },
   "graphics" : {
-    "resolution" : "800x600",
+    "resolution" : "1024x768",
     "fullscreen" : false
   }
 }
