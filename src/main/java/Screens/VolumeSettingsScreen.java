@@ -7,31 +7,23 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import jdk.jfr.FlightRecorder;
 
-public class SettingsScreen implements Screen {
-
+public class VolumeSettingsScreen implements Screen {
     private final MyGame game;
     private Stage stage;
     private final ConfigManager configManager;
 
-    // Виджеты
-    private Label upKeyLabel;
-    private Label downKeyLabel;
-    private Label leftKeyLabel;
-    private Label rightKeyLabel;
-    private Label attackKeyLabel;
-    private SelectBox<String> resolutionBox;
-    private CheckBox fullscreenCheckbox;
+    private Integer currentVolume;
 
-    private boolean waitingForInput = false; // Флаг ожидания ввода
-    private String currentKeyAction = "";   // Какую клавишу настраиваем (moveUp, moveDown, и т.д.)
-
-    public SettingsScreen(MyGame game) {
+    public VolumeSettingsScreen(MyGame game) {
         this.game = game;
         this.configManager = new ConfigManager(); // Загружаем конфигурацию
     }
@@ -55,27 +47,26 @@ public class SettingsScreen implements Screen {
         titleLabel.setFontScale(2);
         table.add(titleLabel).padBottom(20).row();
 
-        TextButton resolutionButton = new TextButton("Resolution", skin);
-        resolutionButton.addListener(new ClickListener() {
+        Label volumeLabel = new Label("Volume:", skin);
+        Slider volumeSlider = new Slider(0, 100, 1, false, skin);
+
+        Integer savedVolume = configManager.getIntValue("audio", "volume");
+        Label volumeValueLabel = new Label(Math.round(savedVolume) + "%", skin);
+        volumeSlider.setValue(savedVolume);
+        volumeSlider.addListener(new ChangeListener() {
             @Override
-            public void clicked(InputEvent event, float x, float y) {
-                resolutionSettings();
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                currentVolume = Math.round(volumeSlider.getValue());
+                volumeValueLabel.setText(currentVolume + "%");
             }
         });
-
-        TextButton volumeButton = new TextButton("Volume", skin);
-        volumeButton.addListener(new ClickListener() {
+        
+        // Кнопка для применения настроек
+        TextButton applyButton = new TextButton("Apply", skin);
+        applyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                volumeSettings();
-            }
-        });
-
-        TextButton KeyboardAndMouseButton = new TextButton("Keyboard and mouse", skin);
-        KeyboardAndMouseButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                keyboardAndMouseSettings();
+                applySettings();
             }
         });
 
@@ -89,29 +80,22 @@ public class SettingsScreen implements Screen {
         });
 
         // Расположение элементов на таблице
-        table.add(resolutionButton).padTop(20).width(150).height(50).row();
-        table.add(volumeButton).padTop(20).width(150).height(50).row();
-        table.add(KeyboardAndMouseButton).padTop(20).width(150).height(50).row();
+        table.add(volumeLabel).padRight(10);
+        table.add(volumeSlider).width(200).padRight(10);
+        table.add(volumeValueLabel);
+        table.add(applyButton).padTop(20).width(150).height(50).row();
         table.add(backButton).padTop(20).width(150).height(50).row();
 
         stage.addActor(table);
     }
 
-    private void resolutionSettings() {
-        game.setScreen(new ResolutionSettingsScreen(game));
-    }
-
-    private void volumeSettings() {
-        game.setScreen(new VolumeSettingsScreen(game));
-    }
-
-    private void keyboardAndMouseSettings() {
-        game.setScreen(new KeyboardAndMouseSettingsScreen(game));
+    private void applySettings() {
+        configManager.setIntValue("audio", "volume", currentVolume);
     }
 
     private void returnToPreviousScreen() {
         if (!game.isResume())
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new SettingsScreen(game));
         else {
             game.setScreen(new ResumeGameScreen(game));
         }
@@ -121,7 +105,6 @@ public class SettingsScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         stage.act(delta);
         stage.draw();
     }
@@ -148,5 +131,4 @@ public class SettingsScreen implements Screen {
     @Override
     public void resume() {
     }
-
 }

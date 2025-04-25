@@ -57,7 +57,7 @@ public class GameScreen implements Screen {
 
 
     public void loadCamera() {
-        String resolution = configManager.getValue("graphics", "resolution"); // Ширина окна (пиксели)
+        String resolution = configManager.getStringValue("graphics", "resolution"); // Ширина окна (пиксели)
         String[] resParts = resolution.split("x");
         int viewportWidth = Integer.parseInt(resParts[0]);
         int viewportHeight = Integer.parseInt(resParts[1]);
@@ -77,15 +77,9 @@ public class GameScreen implements Screen {
 
         if (batch == null) {
             batch = new SpriteBatch();
-
             // Пол
             floorTexture = new Texture("floor\\Floor1.png");
-
-
-
             stateTime = 0f;
-
-
             // Камера
             loadCamera();
 

@@ -33,13 +33,13 @@ public class MyGame extends Game {
         // Проверяем, был ли первый запуск
         if (!configManager.hasKey("graphics", "resolution")) {
             // Если настройки отсутствуют, устанавливаем значения по умолчанию
-            configManager.setValue("graphics", "resolution", "800x600");
+            configManager.setStringValue("graphics", "resolution", "800x600");
             configManager.setBoolean("graphics", "fullscreen", false);
             configManager.saveConfig();
         }
 
         // Загружаем настройки экрана
-        String resolution = configManager.getValue("graphics", "resolution");
+        String resolution = configManager.getStringValue("graphics", "resolution");
         boolean fullscreen = configManager.getBoolean("graphics", "fullscreen");
 
         String[] resParts = resolution.split("x");

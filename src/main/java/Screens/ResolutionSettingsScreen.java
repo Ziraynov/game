@@ -13,25 +13,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class SettingsScreen implements Screen {
-
+public class ResolutionSettingsScreen implements Screen {
     private final MyGame game;
     private Stage stage;
     private final ConfigManager configManager;
 
     // Виджеты
-    private Label upKeyLabel;
-    private Label downKeyLabel;
-    private Label leftKeyLabel;
-    private Label rightKeyLabel;
-    private Label attackKeyLabel;
     private SelectBox<String> resolutionBox;
     private CheckBox fullscreenCheckbox;
 
-    private boolean waitingForInput = false; // Флаг ожидания ввода
-    private String currentKeyAction = "";   // Какую клавишу настраиваем (moveUp, moveDown, и т.д.)
-
-    public SettingsScreen(MyGame game) {
+    public ResolutionSettingsScreen(MyGame game) {
         this.game = game;
         this.configManager = new ConfigManager(); // Загружаем конфигурацию
     }
@@ -55,27 +46,21 @@ public class SettingsScreen implements Screen {
         titleLabel.setFontScale(2);
         table.add(titleLabel).padBottom(20).row();
 
-        TextButton resolutionButton = new TextButton("Resolution", skin);
-        resolutionButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                resolutionSettings();
-            }
-        });
+        Label resolutionLabel = new Label("Screen Resolution:", skin);
+        resolutionBox = new SelectBox<>(skin);
+        resolutionBox.setItems("800x600", "1024x768", "1280x720", "1920x1080");
+        resolutionBox.setSelected(configManager.getStringValue("graphics", "resolution"));
 
-        TextButton volumeButton = new TextButton("Volume", skin);
-        volumeButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                volumeSettings();
-            }
-        });
+        // Чекбокс для полноэкранного режима
+        fullscreenCheckbox = new CheckBox(" Fullscreen", skin);
+        fullscreenCheckbox.setChecked(configManager.getBoolean("graphics", "fullscreen"));
 
-        TextButton KeyboardAndMouseButton = new TextButton("Keyboard and mouse", skin);
-        KeyboardAndMouseButton.addListener(new ClickListener() {
+        // Кнопка для применения настроек
+        TextButton applyButton = new TextButton("Apply", skin);
+        applyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                keyboardAndMouseSettings();
+                applySettings();
             }
         });
 
@@ -89,29 +74,46 @@ public class SettingsScreen implements Screen {
         });
 
         // Расположение элементов на таблице
-        table.add(resolutionButton).padTop(20).width(150).height(50).row();
-        table.add(volumeButton).padTop(20).width(150).height(50).row();
-        table.add(KeyboardAndMouseButton).padTop(20).width(150).height(50).row();
+        table.add(resolutionLabel).padBottom(10).left();
+        table.add(resolutionBox).padBottom(10).row();
+        table.add(fullscreenCheckbox).padBottom(20).left().row();
+        table.add(applyButton).padTop(20).width(150).height(50).row();
         table.add(backButton).padTop(20).width(150).height(50).row();
 
         stage.addActor(table);
     }
 
-    private void resolutionSettings() {
-        game.setScreen(new ResolutionSettingsScreen(game));
-    }
+    private void applySettings() {
+        String resolution = resolutionBox.getSelected();
+        boolean fullscreen = fullscreenCheckbox.isChecked();
 
-    private void volumeSettings() {
-        game.setScreen(new VolumeSettingsScreen(game));
-    }
+        // Валидация разрешения
+        if (!resolution.matches("\\d+x\\d+")) {
+            System.out.println("Invalid resolution format!");
+            return;
+        }
 
-    private void keyboardAndMouseSettings() {
-        game.setScreen(new KeyboardAndMouseSettingsScreen(game));
+        // Сохраняем настройки в ConfigManager
+        configManager.setStringValue("graphics", "resolution", resolution);
+        configManager.setBoolean("graphics", "fullscreen", fullscreen);
+        configManager.saveConfig();
+
+        // Применяем настройки экрана
+        String[] resParts = resolution.split("x");
+        int width = Integer.parseInt(resParts[0]);
+        int height = Integer.parseInt(resParts[1]);
+
+        if (fullscreen) {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        } else {
+            Gdx.graphics.setWindowedMode(width, height);
+        }
+
     }
 
     private void returnToPreviousScreen() {
         if (!game.isResume())
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new SettingsScreen(game));
         else {
             game.setScreen(new ResumeGameScreen(game));
         }
@@ -148,5 +150,4 @@ public class SettingsScreen implements Screen {
     @Override
     public void resume() {
     }
-
 }

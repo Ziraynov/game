@@ -43,7 +43,7 @@ public class MenuScreen implements Screen {
             }
         });
 
-        // Кнопка "Настройки" (пока не работает)
+        // Кнопка "Настройки"
         TextButton settingsButton = new TextButton("Settings", style);
         settingsButton.addListener(new ClickListener() {
             @Override

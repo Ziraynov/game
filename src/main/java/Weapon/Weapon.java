@@ -1,5 +1,6 @@
 package Weapon;
 
+import Classes.ConfigManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,7 +43,7 @@ public class Weapon {
                 if (!bullet.isActive()) {
                     bullet.activate(startX, startY, targetX, targetY, bulletSpeed);
                     if (sound != null) {
-                        sound.play();
+                        sound.setVolume(sound.play(),0.1f );
                     }
                     timeSinceLastShot = 0; // Сбрасываем таймер
                     break;

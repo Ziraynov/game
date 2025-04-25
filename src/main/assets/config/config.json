@@ -9,7 +9,10 @@
     "attack" : "Mouse Left"
   },
   "graphics" : {
-    "resolution" : "1024x768",
+    "resolution" : "800x600",
     "fullscreen" : false
+  },
+  "audio" : {
+    "volume" : 51
   }
 }

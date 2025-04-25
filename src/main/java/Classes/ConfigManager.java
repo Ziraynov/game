@@ -1,12 +1,13 @@
 package Classes;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ConfigManager {
 
@@ -25,17 +26,27 @@ public class ConfigManager {
     private void loadConfig() {
         try {
             File configFile = new File(CONFIG_FILE_PATH);
+            ObjectNode defaultConfig = createDefaultConfig();
+            JsonNode existingConfig = objectMapper.readTree(configFile);
 
-            if (configFile.exists()) {
-                config = (ObjectNode) objectMapper.readTree(configFile);
-            } else {
-                // Если файл не найден, создаём новый с дефолтными настройками
-                config = createDefaultConfig();
+            if (configFile.exists() && !existingConfig.isEmpty()) {
+
+                mergeConfigs(defaultConfig, (ObjectNode) existingConfig);
+                // Если были изменения - сохраняем
+                if (!existingConfig.equals(config)) {
+                    config = (ObjectNode) existingConfig;
+                    saveConfig();
+                } else {
+                    config = (ObjectNode) existingConfig;
+                }
+            } else  {
+                // Создаём новый конфиг с дефолтными настройками
+                config = defaultConfig;
                 saveConfig();
             }
         } catch (IOException e) {
             System.err.println("Ошибка загрузки конфигурации: " + e.getMessage());
-            config = createDefaultConfig(); // Если ошибка, используем настройки по умолчанию
+            config = createDefaultConfig();
         }
     }
 
@@ -54,17 +65,42 @@ public class ConfigManager {
         controls.put("moveRight", "D");
         controls.put("action", "E");
         controls.put("pause", "Escape");
-        controls.put("attack", "Space");
+        controls.put("attack", "SPACE");
 
         ObjectNode graphics = objectMapper.createObjectNode();
-        graphics.put("resolution", "1920x1080");
-        graphics.put("fullscreen", true);
+        graphics.put("resolution", "800x600");
+        graphics.put("fullscreen", false);
+
+        ObjectNode audio = objectMapper.createObjectNode();
+        audio.put("volume", 50);
 
         defaultConfig.set("controls", controls);
+        defaultConfig.set("audio", audio);
         defaultConfig.set("graphics", graphics);
 
 
         return defaultConfig;
+    }
+
+    private void mergeConfigs(ObjectNode defaultNode, ObjectNode existingNode) {
+        Iterator<Map.Entry<String, JsonNode>> defaultFields = defaultNode.fields();
+
+        while (defaultFields.hasNext()) {
+            Map.Entry<String, JsonNode> entry = defaultFields.next();
+            String fieldName = entry.getKey();
+            JsonNode defaultVal = entry.getValue();
+
+            if (!existingNode.has(fieldName)) {
+                // Добавляем отсутствующее поле
+                existingNode.set(fieldName, defaultVal);
+            } else {
+                // Рекурсивная проверка для вложенных объектов
+                JsonNode existingVal = existingNode.get(fieldName);
+                if (defaultVal.isObject() && existingVal.isObject()) {
+                    mergeConfigs((ObjectNode) defaultVal, (ObjectNode) existingVal);
+                }
+            }
+        }
     }
 
     /**
@@ -85,9 +121,14 @@ public class ConfigManager {
      * @param key      Ключ внутри категории (например, "moveUp", "resolution")
      * @return Значение в виде строки
      */
-    public String getValue(String category, String key) {
+    public String getStringValue(String category, String key) {
         loadConfig();
         return config.get(category).get(key).asText();
+    }
+
+    public Integer getIntValue(String category, String key) {
+        loadConfig();
+        return config.get(category).get(key).asInt();
     }
 
     /**
@@ -97,7 +138,20 @@ public class ConfigManager {
      * @param key      Ключ внутри категории (например, "moveUp", "resolution")
      * @param value    Новое значение
      */
-    public void setValue(String category, String key, String value) {
+    public void setStringValue(String category, String key, String value) {
+        if (!config.has(category)) {
+            // Если категории нет, создаём её как ObjectNode
+            config.set(category, objectMapper.createObjectNode());
+        }
+
+        // Добавляем или обновляем значение внутри категории
+        ((ObjectNode) config.get(category)).put(key, value);
+
+        // Сохраняем изменения в файл
+        saveConfig();
+    }
+
+    public void setIntValue(String category, String key, Integer value) {
         if (!config.has(category)) {
             // Если категории нет, создаём её как ObjectNode
             config.set(category, objectMapper.createObjectNode());

@@ -4,19 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6650e56-d6d9-41eb-a04f-d6de3f026b18" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/assets/config/config.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Classes/ConfigManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/Screens/SettingsScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+    <list default="true" id="d6650e56-d6d9-41eb-a04f-d6de3f026b18" name="Changes" comment="Добавлены классы оружия и пули, сущности и наследуемые от него главный персонаж и враг1. Была скоректировна стрельба по конопке мыши и по направлению курсора">
+      <change afterPath="$PROJECT_DIR$/src/main/java/Screens/KeyboardAndMouseSettingsScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Screens/ResolutionSettingsScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/Screens/VolumeSettingsScreen.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/Coordinates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Classes/Coordinates.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/GameScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/MenuScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/MenuScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/assets/config/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/assets/config/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/ConfigManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Classes/ConfigManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/HandleInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Classes/HandleInput.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Classes/MyGame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Classes/MyGame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/ResumeGameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/ResumeGameScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Classes/SettingsScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Screens/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/GameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Screens/MenuScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/MenuScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Screens/ResumeGameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/ResumeGameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Screens/SettingsScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Screens/SettingsScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Weapon/Weapon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Weapon/Weapon.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,22 +91,24 @@
     <option name="showModules" value="false" />
     <option name="showScratchesAndConsoles" value="false" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Gradle.game [:Main.main()].executor": "Run",
-    "Gradle.game [build].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/user/IdeaProjects/calculator_project",
-    "onboarding.tips.debug.path": "C:/Users/user/IdeaProjects/game/src/main/java/org/example/Main.java",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Gradle.Download Sources.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.game [:Main.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.game [build].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/user/IdeaProjects/calculator_project&quot;,
+    &quot;onboarding.tips.debug.path&quot;: &quot;C:/Users/user/IdeaProjects/game/src/main/java/org/example/Main.java&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\user\IdeaProjects\game\src\main\assets\ui" />
+      <recent name="C:\Users\user\IdeaProjects\game\src\main\assets\Weapon" />
       <recent name="C:\Users\user\IdeaProjects\game\src\main\assets" />
+      <recent name="C:\Users\user\IdeaProjects\game\src\main\assets\ui" />
       <recent name="C:\Users\user\IdeaProjects\game\src\main\assets\floor" />
     </key>
   </component>
@@ -158,6 +161,23 @@
       <option name="presentableId" value="Default" />
       <updated>1732038449493</updated>
     </task>
+    <task id="LOCAL-00001" summary="Добвален класс ConfigManager для работы с файлом config.json в котором храняться настройки игры. Теперь можно менять настройки во время игры и до входа в нее">
+      <option name="closed" value="true" />
+      <created>1733666534798</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1733666534798</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Добавлены классы оружия и пули, сущности и наследуемые от него главный персонаж и враг1. Была скоректировна стрельба по конопке мыши и по направлению курсора">
+      <option name="closed" value="true" />
+      <created>1734886341551</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734886341551</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -174,5 +194,17 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Добвален класс ConfigManager для работы с файлом config.json в котором храняться настройки игры. Теперь можно менять настройки во время игры и до входа в нее" />
+    <MESSAGE value="Добавлены классы оружия и пули, сущности и наследуемые от него главный персонаж и враг1. Была скоректировна стрельба по конопке мыши и по направлению курсора" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлены классы оружия и пули, сущности и наследуемые от него главный персонаж и враг1. Была скоректировна стрельба по конопке мыши и по направлению курсора" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="java.lang.IllegalArgumentException" memberName="detailMessage" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>
